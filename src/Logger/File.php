@@ -88,18 +88,19 @@ class File implements LoggerInterface
             \join('-', [$this->level, (\is_string($this->debug) ? $this->debug : FILE::LOG_DEBUG)]), $this->sapi, $user, $fpid, $this->suffix
         ]));
         if (\is_file($file) && (\filesize($file) >= $this->filesize)) {
+            $timestamp = (int) $microtime;
             $archive = FS::mkdir(
                 $path,
                 $this->archive,
-                \date('Y', $microtime),
-                \date('m', $microtime),
-                \date('d', $microtime),
+                \date('Y', $timestamp),
+                \date('m', $timestamp),
+                \date('d', $timestamp),
                 $user,
                 $this->level,
                 $this->sapi
             );
 
-            rename($file, FS::path($archive, \join('.', [
+            \rename($file, FS::path($archive, \join('.', [
                 Format::microtime('Ymd-His', '-', $microtime),
                 $user,
                 $this->level,
